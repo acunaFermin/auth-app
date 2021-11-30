@@ -1,11 +1,7 @@
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ɵangular_packages_forms_forms_w,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -26,18 +22,14 @@ export class LoginComponent {
   });
 
   login() {
-    console.log(
-      'valid',
-      this.miFormulario.valid,
-      'value',
-      this.miFormulario.value
-    );
     const { email, password } = this.miFormulario.value;
 
     this.authService.login(email, password).subscribe((resp) => {
-      console.log(resp);
+      if (resp.ok) {
+        this.router.navigateByUrl('/dashboard');
+      } else {
+        Swal.fire('Error', resp.error.msg, 'error');
+      }
     });
-
-    //this.router.navigateByUrl('/dashboard');
   }
 }
